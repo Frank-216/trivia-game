@@ -10,10 +10,8 @@ var firstQuestion =
 	'Jamie Lannister',
 	'Euron Greyjoy'
 	],
-	"correctAnswer":
-	[
-	'Jamie Lannister',
-	],
+	"correctAnswer":'Jamie Lannister',
+	
 	'imageGif':"https://media.giphy.com/media/VElt9te30u4Ks/giphy.gif",
 }
 var secondQuestion = 
@@ -26,12 +24,10 @@ var secondQuestion =
 	'Arya Stark',
 	'Ser Bronn of the BlackWater',
 	'Greyworm',
-	'Robb Stark'
+	'Rob Stark'
 	],
-	"correctAnswer":
-	[
-	'Rob Stark',
-	],
+	"correctAnswer":'Rob Stark',
+	
 	'imageGif':"https://media.giphy.com/media/B4u41wAQ4KiTm/giphy.gif",
 }
 var thirdQuestion = 
@@ -46,10 +42,7 @@ var thirdQuestion =
 		'Arya Stark',
 		'Samwell Tarlly'
 	],
-	"correctAnswer":
-	[
-		'Arya Stark',
-	],
+	"correctAnswer":'Arya Stark',
 	'imageGif':'https://media.giphy.com/media/Bwt8B1Q2fyNBC/giphy.gif',
 }
 var forthQuestion= 
@@ -64,11 +57,8 @@ var forthQuestion=
 		'Stag',
 		'Kracken'
 	],
-	"correctAnswer":
-	[
-		'Direwolf',
-	],
-		'imageGif':"https://thekingskeep.files.wordpress.com/2011/05/stark-sigil.jpg",
+	"correctAnswer":'Direwolf',
+	'imageGif':"https://thekingskeep.files.wordpress.com/2011/05/stark-sigil.jpg",
 
 	}
 var fifthQuestion = 
@@ -83,10 +73,7 @@ var fifthQuestion =
 		'Robert Aryyn',
 		'Jon Snow'
 	],
-	"correctAnswer":
-	[
-		'Jon Snow',
-	],
+	"correctAnswer":'Jon Snow',
 		'imageGif':"https://33.media.tumblr.com/4c7d55dd13db3646853a3ee55e3e2501/tumblr_np91m8cmYx1s5m21go5_250.gif",
 
 	}
@@ -133,13 +120,19 @@ function render(){
 }// Close Render
 //addVideo takes information object Video URL and turns it into a new video 
 function changeQuestion(){
-	console.log(myArray.length);
-	var number = Math.floor(Math.random() * myArray.length);
-	question = myArray[number];
-
-	console.log(myArray[number]);
-	console.log(question + 'line 78');
-	return question;
+	if(myArray.length >0){
+		console.log(myArray.length);
+		var number = Math.floor(Math.random() * myArray.length);
+		question = myArray[number];
+		myArray.splice(number, 1);
+		console.log(number.length);
+		console.log(myArray[number]);
+	
+		return question;
+	}else{
+		alert( "The game is over!");
+	}
+	
 }
 
 function displayTimeRunsOut(){
@@ -161,9 +154,16 @@ function displayWrongAnswer(){
 	div.html('<h2>' + userInput + " is incorrect! The correctAnswer was " + answer + "! </h2>");
 	$('.image').append(div);
 
+	setTimeout(nextQuestion, 8000);
+
 }
 function nextQuestion (){
-	
+	//call change question to pick a new question
+	$('#start').empty();
+	changeQuestion();
+	//call render to render that question 
+	render();
+
 }
 $(document).ready(function(){
 
@@ -191,13 +191,14 @@ $(document).ready(function(){
 	})//close Click
 
 	$(document).on('click',".temp", function(){
+
 		// Hold empty timer area
 		console.log(question.questionScript);
 		$('#timer').html('');
 		// clear the timer 
 		clearInterval(intervalID);
 		//Hold the correct answer
-		answer = question.correctAnswer[0];
+		answer = question.correctAnswer;
 		console.log(answer + " answer");
 		//Hold the users Answer
 		userInput	= $(this).data("let");
@@ -216,20 +217,28 @@ $(document).ready(function(){
 				console.log(newDiv);
 		$('#start').append(newDiv);*/
 		// Set image.  not dependent on correct answer 
-		displayImage();
 		// Sets the text informing the player whether they have won or lost 
+		console.log(userInput);
+		console.log(userInput ===answer);
+		console.log(answer);
 		if (userInput === answer){
+			displayImage();
+			console.log("got here");
 			var div = $("<div>");
 			div.addClass("col-md-12");
 			console.log(answer);
 			div.html('<h2>'+answer + " is correct! you have won this round.</h2>");
-			$(".image").append(div); 
+			console.log(div);
+			$("#start").append(div); 
+			setTimeout(nextQuestion, 8000);
+
 		}else{
+			displayImage();
 			displayWrongAnswer();
+			console.log('wrong')
 			}
 
 		//Will empty the Temp
-		setInterval(reset, 8);
 		})// close 	
 
 	

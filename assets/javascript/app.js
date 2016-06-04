@@ -95,12 +95,14 @@ console.log(myArray.length);
 console.log(myArray[2]);
 //Set the question to an var that can go anywhere.  Make an function that will adjus the falue of this array. 
 var question;
+var answer; 
+var userInput;
 // counter for round Timer  
 var counter = 20; 
 //global interval ID
 var intervalID;
 //add my quote to my page every time 
-function displayQuestion(question){
+function displayQuestion(){
 	console.log(true);
 	var startDiv = $('<div>');
 		//first adjust the button 
@@ -113,7 +115,7 @@ function displayQuestion(question){
 		
 
 }
-function render(question){
+function render(){
 	var startDiv = $('#start');
 		//first adjust the button 
 		startDiv.html(
@@ -142,8 +144,26 @@ function changeQuestion(){
 
 function displayTimeRunsOut(){
 		$('#start').empty();
+		displayQuestion(question);
+}
+function displayImage(){
+	var gifUrl = question.imageGif;
+	console.log(gifUrl);
+	var image = $("<img>");
+	image.addClass('img-responsive image')
+	image.attr('src', gifUrl);
+	$('.marker').append(image);
 
+}
+function displayWrongAnswer(){
+	var div = $("<div>");
+	div.addClass("col-md-12");
+	div.html('<h2>' + userInput + " is incorrect! The correctAnswer was " + answer + "! </h2>");
+	$('.image').append(div);
 
+}
+function nextQuestion (){
+	
 }
 $(document).ready(function(){
 
@@ -161,7 +181,6 @@ $(document).ready(function(){
 			$('#timer').html("<h3>" + counter	+" </h2");
 			// if = user inform user that they have lost and call a function that will pick a new question. 
 			if(counter === 0 ){
-				alert( "Times UP");
 				console.log('clearing interval', intervalID);
 				displayTimeRunsOut();
 				clearInterval(intervalID);
@@ -178,10 +197,10 @@ $(document).ready(function(){
 		// clear the timer 
 		clearInterval(intervalID);
 		//Hold the correct answer
-		var answer = question.correctAnswer[0];
+		answer = question.correctAnswer[0];
 		console.log(answer + " answer");
 		//Hold the users Answer
-		var userInput	= $(this).data("let");
+		userInput	= $(this).data("let");
 		console.log(userInput);
 		// Empty the Start Div 
 		$('#start').empty();
@@ -197,28 +216,20 @@ $(document).ready(function(){
 				console.log(newDiv);
 		$('#start').append(newDiv);*/
 		// Set image.  not dependent on correct answer 
-		var gifUrl = question.imageGif;
-		console.log(gifUrl);
-		var image = $("<img>");
-		image.addClass('img-responsive')
-		image.attr('src', gifUrl);
-		$('.marker').append(image);
+		displayImage();
 		// Sets the text informing the player whether they have won or lost 
 		if (userInput === answer){
 			var div = $("<div>");
 			div.addClass("col-md-12");
+			console.log(answer);
 			div.html('<h2>'+answer + " is correct! you have won this round.</h2>");
-			$(".marker").append(div); 
+			$(".image").append(div); 
 		}else{
-			var div = $("<div>");
-			div.addClass("col-md-12");
-			div.html('<h2>' + userInput + " is incorrect! The correctAnswer was " + answer + "! </h2>");
-			$('.marker').append(div);
+			displayWrongAnswer();
 			}
-			delayNext();
 
 		//Will empty the Temp
-		
+		setInterval(reset, 8);
 		})// close 	
 
 	

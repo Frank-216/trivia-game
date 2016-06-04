@@ -51,8 +51,10 @@ var draftQuestion =
 		'#':'answer#',
 	}
 }
-var array = [firstQuestion, secondQuestion];
-console.log(array[1]);
+var myArray = [firstQuestion, secondQuestion];
+console.log(myArray[1]);
+//Set the question to an var that can go anywhere.  Make an function that will adjus the falue of this array. 
+var question;
 // counter for round Timer  
 var counter = 20; 
 //add my quote to my page every time 
@@ -68,14 +70,20 @@ function render(){
 		}
 }// Close Render
 //addVideo takes information object Video URL and turns it into a new video 
+function changeQuestion(){
+	var number = Math.floor(Math.random() * myArray.length);
+	var	question = myArray[number];
+	console.log(question);
+}
 function delayNext(){
 	console.log("Bangers");
 	$('#start').empty();
-
-
 }
+
 $(document).ready(function(){
+
 	$('#start').on('click',function(){
+		changeQuestion();
 		var button = $('#start');
 		//first adjust the button 
 		button.html(function(n){
@@ -95,7 +103,7 @@ $(document).ready(function(){
 			}
 		}, 1000)
 
-	})
+	})//close Click
 
 	$(document).on('click','.temp', function(){
 		// Hold Answer
@@ -135,9 +143,7 @@ $(document).ready(function(){
 
 		//Will empty the Temp
 		
-		})
-		// Set the length to the length of my current question
-	
+		})// close 	
 
 	
 })

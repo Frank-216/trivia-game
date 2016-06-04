@@ -34,25 +34,65 @@ var secondQuestion =
 	],
 	'imageGif':"https://media.giphy.com/media/B4u41wAQ4KiTm/giphy.gif",
 }
-var draftQuestion = 
+var thirdQuestion = 
 	{
 	'questionNumber': '3',
 	'timeRemaining': 30,
-	'questionScript': "Question?",
+	'questionScript': "Who owns the sword needle?",
 	'potentialAnswers':
 	[
-		'answer1',
-		'answer2',
-		'answer3',
-		'answer4'
+		'Cerisi Lannister',
+		'Daenerys Targaryen',
+		'Arya Stark',
+		'Samwell Tarlly'
 	],
 	"correctAnswer":
-	{
-		'#':'answer#',
-	}
+	[
+		'Arya Stark',
+	],
+	'imageGif':'https://media.giphy.com/media/Bwt8B1Q2fyNBC/giphy.gif',
 }
-var myArray = [firstQuestion, secondQuestion];
-console.log(myArray[1]);
+var forthQuestion= 
+	{
+	'questionNumber': '4',
+	'timeRemaining': 30,
+	'questionScript': "What is the house sigal of house stark?",
+	'potentialAnswers':
+	[
+		'Direwolf',
+		'Dragon',
+		'Stag',
+		'Kracken'
+	],
+	"correctAnswer":
+	[
+		'Direwolf',
+	],
+		'imageGif':"https://thekingskeep.files.wordpress.com/2011/05/stark-sigil.jpg",
+
+	}
+var fifthQuestion = 
+{
+	'questionNumber': '5',
+	'timeRemaining': 30,
+	'questionScript': "Who was the 998 lord commander of the nights watch?",
+	'potentialAnswers':
+	[
+		'Robb Start',
+		'Daenerys Targaryen',
+		'Robert Aryyn',
+		'Jon Snow'
+	],
+	"correctAnswer":
+	[
+		'Jon Snow',
+	],
+		'imageGif':"https://33.media.tumblr.com/4c7d55dd13db3646853a3ee55e3e2501/tumblr_np91m8cmYx1s5m21go5_250.gif",
+
+	}
+var myArray = [firstQuestion, secondQuestion, thirdQuestion,forthQuestion, fifthQuestion];
+console.log(myArray.length);
+console.log(myArray[2]);
 //Set the question to an var that can go anywhere.  Make an function that will adjus the falue of this array. 
 var question;
 // counter for round Timer  
@@ -60,7 +100,25 @@ var counter = 20;
 //global interval ID
 var intervalID;
 //add my quote to my page every time 
+function displayQuestion(question){
+	console.log(true);
+	var startDiv = $('<div>');
+		//first adjust the button 
+		startDiv.html(function(n){
+			return "<h1> "+question.questionScript +"</h1>";
+		})
+		console.log(question.questionScript);
+		startDiv.addClass('col-md-12 marker');
+		$('#start').append(startDiv);
+		
+
+}
 function render(question){
+	var startDiv = $('#start');
+		//first adjust the button 
+		startDiv.html(
+			"<h1> "+question.questionScript +"</h1>"
+		);
 	var length = (question.potentialAnswers.length);
 
 	for (var i = 0; i < length ; i ++){
@@ -73,30 +131,27 @@ function render(question){
 }// Close Render
 //addVideo takes information object Video URL and turns it into a new video 
 function changeQuestion(){
+	console.log(myArray.length);
 	var number = Math.floor(Math.random() * myArray.length);
-	var	question = {};
 	question = myArray[number];
-	console.log(myArray[number] );
-	console.log(question);
+
+	console.log(myArray[number]);
 	console.log(question + 'line 78');
 	return question;
 }
-function delayNext(){
-	console.log("Bangers");
-	$('#start').empty();
-}
 
+function displayTimeRunsOut(){
+		$('#start').empty();
+
+
+}
 $(document).ready(function(){
 
 	$('#startGame').on('click',function(){
 		// the the question for this round 
-		var question = changeQuestion();
+		question = changeQuestion();
 		console.log(question);
-		var button = $('#start');
-		//first adjust the button 
-		button.html(function(n){
-			return "<h1> "+question.questionScript +"</h1>";
-		})
+		displayQuestion(question);
 		render(question);
 		//Set and display game 
 		intervalID = setInterval(function(){
@@ -108,6 +163,7 @@ $(document).ready(function(){
 			if(counter === 0 ){
 				alert( "Times UP");
 				console.log('clearing interval', intervalID);
+				displayTimeRunsOut();
 				clearInterval(intervalID);
 			}
 		}, 1000)
@@ -115,43 +171,49 @@ $(document).ready(function(){
 
 	})//close Click
 
-	$(document).on('click','.temp', function(){
+	$(document).on('click',".temp", function(){
 		// Hold empty timer area
-		$('#timer').empty();
+		console.log(question.questionScript);
+		$('#timer').html('');
 		// clear the timer 
 		clearInterval(intervalID);
 		//Hold the correct answer
-		var answer = firstQuestion.correctAnswer[0];
+		var answer = question.correctAnswer[0];
 		console.log(answer + " answer");
 		//Hold the users Answer
 		var userInput	= $(this).data("let");
+		console.log(userInput);
 		// Empty the Start Div 
 		$('#start').empty();
-		// Resent the information in the Div
-		var input = $('<div>');
-		input.addClass("col-md-12 result");
-		input.html(function(n){
-			return "<h1> "+firstQuestion.questionScript +"</h1>";
-		});
 
-		$('#start').append(input);
-		var gifUrl = firstQuestion.imageGif;
+		displayQuestion(question);
+		// Resent the information in the Div
+		/*var newDiv = $('<div>');
+		newDiv.addClass("col-md-12 result");
+		console.log(question.questionScript);
+		newDiv.html(function(n){
+			return "<h1> "+question.questionScript +"</h1>";
+		});
+				console.log(newDiv);
+		$('#start').append(newDiv);*/
+		// Set image.  not dependent on correct answer 
+		var gifUrl = question.imageGif;
 		console.log(gifUrl);
 		var image = $("<img>");
+		image.addClass('img-responsive')
 		image.attr('src', gifUrl);
-
-		$('.result').append(image);
+		$('.marker').append(image);
 		// Sets the text informing the player whether they have won or lost 
 		if (userInput === answer){
 			var div = $("<div>");
 			div.addClass("col-md-12");
 			div.html('<h2>'+answer + " is correct! you have won this round.</h2>");
-			$(".result").append(div); 
+			$(".marker").append(div); 
 		}else{
 			var div = $("<div>");
 			div.addClass("col-md-12");
 			div.html('<h2>' + userInput + " is incorrect! The correctAnswer was " + answer + "! </h2>");
-			$('.result').append(div);
+			$('.marker').append(div);
 			}
 			delayNext();
 

@@ -57,23 +57,29 @@ console.log(myArray[1]);
 var question;
 // counter for round Timer  
 var counter = 20; 
+//global interval ID
+var intervalID;
 //add my quote to my page every time 
-function render(){
-	var length = (firstQuestion.potentialAnswers.length);
+function render(question){
+	var length = (question.potentialAnswers.length);
 
 	for (var i = 0; i < length ; i ++){
 					var btn = $("<button>");
 					btn.addClass('col-md-6  temp btn-primary question'+ i);
-					btn.attr('data-let', firstQuestion.potentialAnswers[i]);
-					btn.html(firstQuestion.potentialAnswers[i]);
+					btn.attr('data-let', question.potentialAnswers[i]);
+					btn.html(question.potentialAnswers[i]);
 					$("#start").append(btn);
 		}
 }// Close Render
 //addVideo takes information object Video URL and turns it into a new video 
 function changeQuestion(){
 	var number = Math.floor(Math.random() * myArray.length);
-	var	question = myArray[number];
+	var	question = {};
+	question = myArray[number];
+	console.log(myArray[number] );
 	console.log(question);
+	console.log(question + 'line 78');
+	return question;
 }
 function delayNext(){
 	console.log("Bangers");
@@ -82,35 +88,43 @@ function delayNext(){
 
 $(document).ready(function(){
 
-	$('#start').on('click',function(){
-		changeQuestion();
+	$('#startGame').on('click',function(){
+		// the the question for this round 
+		var question = changeQuestion();
+		console.log(question);
 		var button = $('#start');
 		//first adjust the button 
 		button.html(function(n){
-			return "<h1> "+firstQuestion.questionScript +"</h1>";
+			return "<h1> "+question.questionScript +"</h1>";
 		})
-		render();
+		render(question);
 		//Set and display game 
-		var intervalID = setInterval(function(){
+		intervalID = setInterval(function(){
 			//reduce counter 
 			counter --; 
 			//display new counter value 
-			$('.timer').html("<h3>" + counter	+" </h2");
+			$('#timer').html("<h3>" + counter	+" </h2");
 			// if = user inform user that they have lost and call a function that will pick a new question. 
 			if(counter === 0 ){
 				alert( "Times UP");
+				console.log('clearing interval', intervalID);
 				clearInterval(intervalID);
 			}
 		}, 1000)
+		console.log('on start', intervalID);
 
 	})//close Click
 
 	$(document).on('click','.temp', function(){
-		// Hold Answer
+		// Hold empty timer area
+		$('#timer').empty();
+		// clear the timer 
+		clearInterval(intervalID);
+		//Hold the correct answer
 		var answer = firstQuestion.correctAnswer[0];
 		console.log(answer + " answer");
+		//Hold the users Answer
 		var userInput	= $(this).data("let");
-		console.log(userInput);
 		// Empty the Start Div 
 		$('#start').empty();
 		// Resent the information in the Div
